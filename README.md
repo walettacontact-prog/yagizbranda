@@ -1,7 +1,20 @@
 # Yağız Branda — Tente Sistemleri (Kamyonet Kasa Tentesi) Web Sitesi
 
+## 🌍 CANLI SİTE (ücretsiz, 7/24)
+### https://walettacontact-prog.github.io/yagizbranda/
+Bilgisayar kapalı olsa bile çalışır. **Ücretsiz** (GitHub Pages) — hiçbir ödeme yok.
+
+**Siteyi güncellemek** (dosyalarda değişiklik yaptıktan sonra):
+```bash
+cd /Users/ensarocakci/yagizbranda
+git add -A && git commit -m "guncelleme" && git push
+```
+~1 dakika içinde canlı siteye yansır.
+
+---
+
 Statik (HTML + CSS + JS) bir web sitesi. **Hiçbir kurulum, build veya Node.js/PHP gerektirmez.**
-Dosyaları paylaşımlı hostinge FTP ile yüklemen yeterli — anında çalışır, çok hızlı açılır ve SEO açısından en iyi yapıdır.
+İleride kendi alan adına/hostinge de aynı dosyaları FTP ile yükleyebilirsin.
 
 ---
 
