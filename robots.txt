@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.yagizbranda.com/sitemap.xml
+Sitemap: https://walettacontact-prog.github.io/yagizbranda/sitemap.xml
