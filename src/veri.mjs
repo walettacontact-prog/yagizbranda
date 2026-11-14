@@ -23,6 +23,9 @@ export const FIRMA = {
   enlem: 40.741938,
   boylam: 30.410503,
   harita: "https://maps.google.com/?cid=4444806815474403940",
+  haritaAd: "YAĞIZ BRANDA", // Google İşletme Profili'ndeki ad (kategori: Tenteci); 14 Kas 2026'da yeniden doğrulandı
+  kgmid: "https://www.google.com/search?kgmid=/g/11zcv_y43z", // Google'ın işletme kaydı kimliği (şemada sameAs)
+  artiKod: "PCR6+Q6 Erenler, Sakarya", // Google Haritalar artı kodu
   yolTarifi: "https://www.google.com/maps/dir/?api=1&destination=40.741938%2C30.410503",
   saatYazi: "Pazartesi – Cumartesi 09:00 – 20:00",
   saatKisa: "Pzt–Cmt 09:00–20:00",
@@ -65,6 +68,19 @@ export const FOTOLAR = {
   "gece": { alt: "Gece atölye önünde mavi kasa tenteli turuncu kamyonet" },
   "branda-yakin": { alt: "Yağız Branda'nın yaptığı siyah kasa brandası, yakından" },
 };
+
+// Yatay (4:3) fotoğraflar (araclar/gorseller.mjs: img/is/<ad>-<genişlik>.webp)
+// "ekip": Instagram'daki teslim paylaşımı ("İstanbul Gaziosmanpaşa müşterimize hayırlı olsun"), atölye önünde gece; kişilerin adı yazılmaz
+export const YATAY = {
+  ekip: { alt: "Teslim günü: İstanbul Gaziosmanpaşa'dan gelen müşterimizle Yağız Branda atölyesinin önünde, tabelanın altında" },
+};
+
+// Ana sayfadaki "Ekibimiz" bölümü: Instagram profilindeki slogan (Kalite · Güven · Dayanıklılık) ve sitede zaten doğrulanmış bilgiler
+export const DEGERLER = [
+  ["Kalite", "Her kasa ayrı ölçülür; tente o kasaya göre yapılır."],
+  ["Güven", "Tamir mi yenileme mi, aracı görünce açıkça söyleriz."],
+  ["Dayanıklılık", "Kavisli üstte su birikmez, alüminyum döşeme paslanmaz."],
+];
 
 // Ana sayfadaki "İşlerimizden" (şehirli kareler) ve kasa tentesi sayfasındaki kareler
 export const GALERI = ["istanbul-pendik", "ankara", "bandirma", "zonguldak", "izmit", "iznik", "afyon", "serdivan"];
@@ -159,6 +175,7 @@ export const HIZMETLER = [
 export const SUREC = ["WhatsApp'tan yazın", "Aracınızı atölyeye getirin", "Tenteli teslim alın"];
 
 export const SSS = [
+  ["Atölyeniz nerede?", "Sakarya'nın Erenler ilçesinde, Güney Mobilyacılar Sanayi Sitesi 1282. Sokak No:36'dayız. Google Haritalar'da “YAĞIZ BRANDA” adıyla kayıtlıyız (artı kod: PCR6+Q6)."],
   ["Başka şehirden gelebilir miyim?", "Evet. İstanbul, Ankara, Kocaeli, Bursa, Balıkesir, Zonguldak ve Afyon'dan müşterilerimiz araçlarını Erenler'deki atölyemize getiriyor. Gelmeden önce WhatsApp'tan yazın, gün belirleyelim."],
   ["Aracımı getirmem gerekiyor mu?", "Evet. Tente kasanın ölçüsüne göre yapıldığı için ölçü, imalat ve montaj atölyemizde yapılır."],
   ["Hangi tente tipleri var?", "Açılır kanatlı, kavisli (kubbeli) ve kapalı kutu kasa tentesi. Kamyon ve TIR brandası, alüminyum kasa döşeme ve tente tamiri de yapılır."],

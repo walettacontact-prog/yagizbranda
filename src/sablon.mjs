@@ -2,7 +2,7 @@
 // Bütün bağlantılar KOK ile başlar (GitHub Pages'te /yagizbranda, alan adında boş), böylece adres değişince yalnızca ADRES değişir.
 // Sade düzen (5 Kasım): kısa metin, fotoğraf üstünde başlıklı hizmet karoları, Türkiye haritası, sık sorulanlar kapalı gelir.
 import fs from "node:fs";
-import { ADRES, KOK, FIRMA, TANIM, ILLER, FOTOLAR, GALERI, GALERI_KASA, HIZMETLER, SUREC, SSS } from "./veri.mjs";
+import { ADRES, KOK, FIRMA, TANIM, ILLER, FOTOLAR, YATAY, DEGERLER, GALERI, GALERI_KASA, HIZMETLER, SUREC, SSS } from "./veri.mjs";
 
 const oku = (ad) => JSON.parse(fs.readFileSync(new URL(ad, import.meta.url), "utf8"));
 const FOTO_BOY = oku("./fotolar.json");
@@ -21,6 +21,9 @@ const SIMGE = {
   posta: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
   ok: '<svg class="ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
   tik: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  olcu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 15 12-12 6 6L9 21z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2"/></svg>',
+  atolye: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"/><path d="M7 21v-7h10v7M7 17h10"/></svg>',
+  turkiye: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
 };
 
 // 4:5 iş fotoğrafı; sizes sayfadaki genişliğe göre
@@ -28,6 +31,13 @@ const foto = (ad, sizes, { yukle = "lazy", sinif = "" } = {}) => {
   const g = FOTO_BOY[ad], en = Math.max(...g);
   return `<img${sinif ? ` class="${sinif}"` : ""} src="${u(`/img/is/${ad}-${g.includes(800) ? 800 : en}.webp`)}" srcset="${g.map((w) => `${u(`/img/is/${ad}-${w}.webp`)} ${w}w`).join(", ")}"
     sizes="${sizes}" width="800" height="1000" alt="${e(FOTOLAR[ad].alt)}" ${yukle === "lazy" ? 'loading="lazy" decoding="async"' : 'fetchpriority="high"'}>`;
+};
+
+// Yatay 4:3 fotoğraf (ekip)
+const yatayFoto = (ad, sizes) => {
+  const g = FOTO_BOY[ad], en = Math.max(...g);
+  return `<img src="${u(`/img/is/${ad}-${en}.webp`)}" srcset="${g.map((w) => `${u(`/img/is/${ad}-${w}.webp`)} ${w}w`).join(", ")}"
+    sizes="${sizes}" width="720" height="540" alt="${e(YATAY[ad].alt)}" loading="lazy" decoding="async">`;
 };
 
 // ---- Şema (JSON-LD) ----
@@ -47,7 +57,7 @@ const ISLETME = {
     "@type": "OfferCatalog", name: "Hizmetler",
     itemListElement: HIZMETLER.map((h) => ({ "@type": "Offer", itemOffered: { "@type": "Service", "@id": `${ADRES}/${h.slug}/#hizmet`, name: h.ad, url: `${ADRES}/${h.slug}/` } })),
   },
-  sameAs: [FIRMA.instagram, FIRMA.harita],
+  sameAs: [FIRMA.instagram, FIRMA.harita, FIRMA.kgmid],
 };
 const SITE = {
   "@type": "WebSite", "@id": `${ADRES}/#site`, url: `${ADRES}/`, name: FIRMA.ad, inLanguage: "tr-TR",
@@ -82,7 +92,7 @@ function iskelet({ yol, baslik, aciklama, og, govde, sema = [], kirinti = null, 
 <meta name="description" content="${e(aciklama)}">
 <link rel="canonical" href="${sayfaAdres}">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#101215">
+<meta name="theme-color" content="#0e0e10">
 <meta name="geo.region" content="TR-54">
 <meta name="geo.placename" content="Erenler, Sakarya">
 <meta name="geo.position" content="${FIRMA.enlem};${FIRMA.boylam}">
@@ -114,6 +124,11 @@ ${onYukle}<link rel="stylesheet" href="${u("/site.css")}">
 </head>
 <body>
 <a class="atla" href="#icerik">İçeriğe geç</a>
+<div class="serit"><div class="kap serit-ic">
+  <a href="${FIRMA.harita}" target="_blank" rel="noopener">${SIMGE.konum}${e(FIRMA.sokak)}, ${FIRMA.ilce} / ${FIRMA.il}</a>
+  <span>${SIMGE.saat}${e(FIRMA.saatKisa)} · ${FIRMA.kapali}</span>
+  <a href="${FIRMA.instagram}" target="_blank" rel="noopener">${SIMGE.ig}${FIRMA.instagramAd}</a>
+</div></div>
 <header class="ust">
   <div class="kap ust-ic">
     <a class="marka" href="${u("/")}"><img src="${u("/img/logo.webp")}" width="44" height="44" alt=""><span><b>YAĞIZ BRANDA</b><small>Tente Sistemleri</small></span></a>
@@ -218,27 +233,48 @@ const altBilgi = () => `<footer class="alt koyu">
 
 // ---- Ana sayfa ----
 function anaSayfa() {
-  const govde = `<section class="giris koyu">
+  const govde = `<section class="giris giris-ana koyu">
   <div class="kap giris-ic">
     <div class="giris-yazi">
       <p class="ust-baslik">${FIRMA.slogan}</p>
-      <h1>Kamyonet kasa tentesi ve branda</h1>
+      <h1>Kamyonet kasa tentesi <span class="altin-yazi">ve branda</span></h1>
       <p class="giris-p">Sakarya'daki atölyemizde ölçüye özel imalat ve montaj. Türkiye'nin her ilinden araç kabul ediyoruz.</p>
       ${dugmeler()}
-      <ul class="olgular">
-        <li>${SIMGE.tik}Ölçüye özel imalat</li>
-        <li>${SIMGE.tik}Atölyede montaj</li>
-        <li>${SIMGE.tik}Her ilden araç</li>
-      </ul>
     </div>
-    <figure class="giris-foto">${foto("atolye-onu", "(min-width: 960px) 420px, (min-width: 640px) 60vw, 92vw", { yukle: "hemen" })}<figcaption>${SIMGE.konum}Atölyemiz · Erenler, Sakarya</figcaption></figure>
+    <div class="giris-gorsel">
+      <figure class="giris-foto">${foto("atolye-onu", "(min-width: 960px) 420px, (min-width: 640px) 60vw, 92vw", { yukle: "hemen" })}</figure>
+      <div class="giris-kart"><img src="${u("/img/logo.webp")}" width="48" height="48" alt=""><span><b>Atölyemiz</b><small>Erenler / Sakarya</small></span></div>
+    </div>
   </div>
+</section>
+
+<section class="guven" aria-label="Neden Yağız Branda">
+  <ul class="kap guven-ic">
+    <li>${SIMGE.olcu}<span><b>Ölçüye özel imalat</b>Her kasaya ayrı tente</span></li>
+    <li>${SIMGE.atolye}<span><b>Atölyede montaj</b>Erenler / Sakarya</span></li>
+    <li>${SIMGE.turkiye}<span><b>Türkiye geneli</b>Her ilden araç kabul</span></li>
+    <li>${SIMGE.saat}<span><b>09:00 – 20:00</b>Pzt–Cmt · ${FIRMA.kapali}</span></li>
+  </ul>
 </section>
 
 <section class="bolum" id="hizmetler">
   <div class="kap">
     ${bolumBas("Hizmetlerimiz", "Tente ve brandada tek adres")}
     ${karolar(HIZMETLER, "(min-width: 1100px) 270px, (min-width: 760px) 45vw, 46vw")}
+  </div>
+</section>
+
+<section class="bolum bolum-gri ekip" id="ekibimiz">
+  <div class="kap ekip-ic">
+    <figure class="ekip-foto">${yatayFoto("ekip", "(min-width: 960px) 560px, 92vw")}<figcaption>Teslim günü · İstanbul Gaziosmanpaşa</figcaption></figure>
+    <div class="ekip-yazi">
+      <p class="ust-baslik">Ekibimiz</p>
+      <h2>Ölçüden montaja aynı ekip, aynı atölye</h2>
+      <p>Aracınızı Erenler'deki atölyemizde karşılar, kasayı ölçer, tenteyi ona göre hazırlar ve yine burada monte ederiz. Teslim ettiğimiz araçları Instagram'da sahiplerine “hayırlı olsun” diyerek paylaşıyoruz.</p>
+      <ul class="degerler">
+${DEGERLER.map(([b, a]) => `        <li><b>${e(b)}</b><span>${e(a)}</span></li>`).join("\n")}
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -380,10 +416,10 @@ function bulunamadi() {
 
 // [dosya, site haritasındaki yol (null: haritaya girmez), html, haritadaki görseller]
 export const SAYFALAR = () => [
-  ["index.html", "/", anaSayfa(), ["atolye-onu", ...GALERI]],
+  ["index.html", "/", anaSayfa(), ["atolye-onu", "ekip", ...GALERI]],
   ...HIZMETLER.map((h) => [`${h.slug}/index.html`, `/${h.slug}/`, hizmetSayfasi(h), [h.gorsel, ...(h.slug === "kamyonet-kasa-tentesi" ? GALERI_KASA : [])]]),
   ["404.html", null, bulunamadi(), []],
 ];
 
 // Görsel site haritası için: fotoğrafın en büyük boyu ve açıklaması
-export const fotoBilgi = (ad) => ({ url: `${ADRES}/img/is/${ad}-${Math.max(...FOTO_BOY[ad])}.webp`, alt: FOTOLAR[ad].alt });
+export const fotoBilgi = (ad) => ({ url: `${ADRES}/img/is/${ad}-${Math.max(...FOTO_BOY[ad])}.webp`, alt: (FOTOLAR[ad] || YATAY[ad]).alt });

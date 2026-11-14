@@ -11,7 +11,7 @@
 - **Stil ve betik:** `public/site.css`, `public/site.js` (telefonda menü). Yazı tipi Archivo (OFL, `public/yazi/`, Türkçe harfler dahil).
   Derleme stil ve betik bağlantısına içerik özeti ekler (`?v=`), değişiklik hemen görünür.
 - **Görseller:** `public/img/` elle değiştirilmez; `npm run gorseller` üretir (kaynak `kaynak/instagram/`, depoya girmez):
-  iş fotoğrafları 4:5 WebP (360–1080 px), logo, sekme simgeleri, her sayfanın paylaşım görseli (`img/og/`, 1200×630).
+  iş fotoğrafları 4:5 WebP (360–1080 px), ekip fotoğrafı 4:3, logo, sekme simgeleri, her sayfanın paylaşım görseli (`img/og/`, 1200×630).
 
 Yerelde açmak (GitHub'daki `/yagizbranda/` yolu ile aynı):
 

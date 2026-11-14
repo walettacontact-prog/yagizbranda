@@ -34,7 +34,7 @@ ${harita.join("\n")}
 fs.writeFileSync("dist/robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${ADRES}/sitemap.xml\n`);
 fs.writeFileSync("dist/site.webmanifest", JSON.stringify({
   name: FIRMA.tamAd, short_name: FIRMA.ad, lang: "tr", start_url: `${KOK}/`, scope: `${KOK}/`, display: "standalone",
-  background_color: "#101215", theme_color: "#101215",
+  background_color: "#0e0e10", theme_color: "#0e0e10",
   icons: [{ src: `${KOK}/icon-192.png`, sizes: "192x192", type: "image/png" }, { src: `${KOK}/apple-touch-icon.png`, sizes: "180x180", type: "image/png" }],
 }, null, 2) + "\n");
 
@@ -51,7 +51,7 @@ fs.writeFileSync("dist/llms.txt", `# ${FIRMA.ad}
 - Hizmet bölgesi: Türkiye geneli; araç Erenler'deki atölyeye getirilir, ölçü, imalat ve montaj atölyede yapılır
 - Müşterilerin geldiği iller: ${ILLER.map((i) => i.ad).join(", ")}
 - Instagram: ${FIRMA.instagram}
-- Google Haritalar: ${FIRMA.harita}
+- Google Haritalar: ${FIRMA.harita} ("${FIRMA.haritaAd}", kategori: Tenteci; artı kod ${FIRMA.artiKod})
 
 ## Hizmetler
 

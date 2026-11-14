@@ -9,7 +9,7 @@ import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromeAc } from "./chrome.mjs";
-import { FOTOLAR, HIZMETLER, FIRMA } from "../src/veri.mjs";
+import { FOTOLAR, YATAY, HIZMETLER, FIRMA } from "../src/veri.mjs";
 
 const kok = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sharp = createRequire(path.join(kok, "..", "ortak-sistem", "package.json"))("sharp");
@@ -76,6 +76,17 @@ for (const [ad, [kod, odak, bolge]] of Object.entries(KAYNAK)) {
   }
   fotoOzet[ad] = genislikler;
 }
+// Yatay 4:3 kareler: ad → [gönderi kodu, piksel bölgesi {left, top, width, height}] (kaynak 720×1280 video kapağı)
+const YATAY_KAYNAK = { ekip: ["DdqVIdvshhs", { left: 0, top: 400, width: 720, height: 540 }] };
+for (const [ad, [kod, kirp]] of Object.entries(YATAY_KAYNAK)) {
+  if (!YATAY[ad]) throw new Error(`src/veri.mjs YATAY'da yok: ${ad}`);
+  const dosya = path.join(kaynak, `ig-${kod}.jpg`);
+  const genislikler = [...new Set([480, 720].map((w) => Math.min(w, kirp.width)))];
+  for (const w of genislikler) {
+    await sharp(dosya).extract(kirp).resize({ width: w }).webp({ quality: 78, effort: 6 }).toFile(path.join(hedef, "is", `${ad}-${w}.webp`));
+  }
+  fotoOzet[ad] = genislikler;
+}
 // Şablon hangi genişliklerin var olduğunu buradan okur (srcset)
 fs.writeFileSync(path.join(kok, "src", "fotolar.json"), JSON.stringify(fotoOzet, null, 1) + "\n");
 
@@ -99,16 +110,16 @@ const ogHtml = (baslik, alt, foto) => `<!doctype html><html><head><meta charset=
 @font-face { font-family: A; font-weight: 400 800; font-stretch: 100% 125%; src: url("${url(path.join(yazi, "archivo-latin.woff2"))}"); }
 @font-face { font-family: A; font-weight: 400 800; font-stretch: 100% 125%; src: url("${url(path.join(yazi, "archivo-tr.woff2"))}"); unicode-range: U+011E-011F, U+0130, U+015E-015F; }
 * { margin: 0; box-sizing: border-box; }
-body { width: 1200px; height: 630px; display: flex; background: #101215; color: #fff; font-family: A, sans-serif; overflow: hidden; }
-.sol { flex: 1; padding: 60px 56px 54px 64px; display: flex; flex-direction: column; background: radial-gradient(120% 90% at 0% 0%, #23262c 0%, #101215 60%); }
+body { width: 1200px; height: 630px; display: flex; background: #0e0e10; color: #fff; font-family: A, sans-serif; overflow: hidden; }
+.sol { flex: 1; padding: 60px 56px 54px 64px; display: flex; flex-direction: column; background: radial-gradient(120% 90% at 0% 0%, #26221a 0%, #0e0e10 60%); border-right: 6px solid #dca521; }
 .marka { display: flex; align-items: center; gap: 18px; }
 .marka img { width: 84px; height: 84px; border-radius: 14px; }
 .marka b { font-weight: 800; font-stretch: 125%; font-size: 30px; letter-spacing: .02em; }
 .marka small { display: block; font-size: 16px; font-weight: 500; color: #c9ccd2; letter-spacing: .14em; text-transform: uppercase; margin-top: 4px; }
 h1 { margin-top: auto; font-weight: 800; font-stretch: 112%; font-size: ${baslik.length > 30 ? 56 : 64}px; line-height: 1.04; letter-spacing: -.01em; }
-h1 i { font-style: normal; color: #f5b800; }
+h1 i { font-style: normal; background: linear-gradient(100deg, #f3d457, #dca521 45%, #b07208 75%, #e8bf3a); -webkit-background-clip: text; background-clip: text; color: transparent; }
 p { margin-top: 18px; font-size: 24px; color: #d5d8dd; line-height: 1.35; }
-.tel { margin-top: 30px; display: inline-flex; align-self: flex-start; gap: 12px; align-items: center; background: #f5b800; color: #111; font-weight: 800; font-size: 26px; padding: 14px 24px; border-radius: 10px; }
+.tel { margin-top: 30px; display: inline-flex; align-self: flex-start; gap: 12px; align-items: center; background: linear-gradient(135deg, #f3d457, #dca521 45%, #c28a12); color: #111; font-weight: 800; font-size: 26px; padding: 14px 24px; border-radius: 10px; }
 .foto { width: 504px; height: 630px; object-fit: cover; }
 </style></head><body><div class="sol"><div class="marka"><img src="${url(profil)}"><div><b>YAĞIZ BRANDA</b><small>Tente Sistemleri</small></div></div>
 <h1>${baslik}</h1><p>${alt}</p><span class="tel">${FIRMA.telYazi}</span></div>
